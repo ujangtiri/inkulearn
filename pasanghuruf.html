@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Pasang Huruf Interaktif - Untuk Anak Disleksia</title>
+  <link href="https://fonts.googleapis.com/css2?family=OpenDyslexic:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="pasanghuruf.css">
+</head>
+<body>
+  <h1 class="game-title">Pasang Huruf</h1>
+
+  <div class="game-box">
+    <div class="game-header">
+      <button class="btn-back" aria-label="Kembali">←</button>
+      <div class="timer-score">
+        <div class="timer"><span id="timer-display">05:00</span></div>
+        <div class="score"><span id="score-display">0</span></div>
+      </div>
+      <button class="btn-menu" aria-label="Menu">☰</button>
+    </div>
+
+    <div class="game-content">
+      <div class="instructions" id="instructions">
+        🎯 Tarik dan lepas huruf untuk memasangkannya pada tempat yang sudah disediakan!
+      </div>
+
+      <div class="clue-image" id="clue-image">
+        <img id="clue-img" src="" alt="Gambar petunjuk" />
+      </div>
+
+      <div class="target-word" id="target-word"></div>
+
+      <div class="letter-bank" id="letter-bank"></div>
+
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+    <button class="btn-start" id="btn-start">🚀 Mulai Bermain!</button>
+  </div>
+
+  <!-- End game result modal -->
+  <div id="end-modal" class="end-modal" aria-hidden="true">
+    <div class="end-backdrop"></div>
+    <div class="end-card" role="dialog" aria-modal="true">
+      <div class="end-header">
+        <h1>Selamat! <span class="confetti">🎉</span></h1>
+        <p class="end-sub">Kamu berhasil mengerjakan seluruh soal!</p>
+      </div>
+
+      <div class="end-actions" style="margin-top:18px;">
+        <button id="btn-restart" class="action btn-primary">↻ Main Lagi</button>
+        <button id="btn-back-home" class="action btn-secondary">🏠 Kembali</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation modal root -->
+  <div id="modal-root" aria-hidden="true" style="display: none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <button class="modal-close" aria-label="Tutup">×</button>
+      <h2 id="modal-title" class="modal-title">Konfirmasi</h2>
+      <div id="modal-body" class="modal-body">Yakin ingin keluar dari Pasang Kata?</div>
+      <div id="modal-footer" class="modal-footer"></div>
+    </div>
+  </div>
+
+  <script src="pasanghuruf.js"></script>
+</body>
+</html>

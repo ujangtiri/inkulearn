@@ -1,0 +1,162 @@
+/* Reset dan base styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    background: #2d2f89 !important;
+    overflow-x: hidden;
+}
+
+.page-background {
+    display: none;
+}
+
+/* Main wrapper full height */
+main {
+    width: 100%;
+    min-height: calc(100vh - 70px); /* 70px = tinggi header */
+    margin: 0;
+    padding: 0;
+    background: #2d2f89;
+    margin-top: 0; /* Reset margin */
+    padding-top: 0;
+
+}
+
+css.mode-belajar-wrapper {
+    width: 100%;
+    min-height: calc(100vh - 70px);
+    background: #2d2f89;
+    padding: 100px 5% 80px; /* Kurangi padding top dari 140px */
+    box-sizing: border-box;
+    margin-top: 70px; /* Kompensasi fixed header */
+}
+
+/* Override main-content dari styles.css */
+.main-content {
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.section-decorator {
+    background: #2d2f89;
+}
+
+.mode-belajar-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.mode-belajar-header p {
+    font-size: 20px;
+    color: #fff;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+    background: #4b54ff;
+    padding: 20px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.learning-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.learning-card {
+    width: 320px;
+    background: #ff9a00;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+    transition: all 0.4s ease;
+    position: relative;
+    border: none; /* Hapus border */
+    outline: none; /* Hapus outline */
+}
+
+.learning-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 25px 50px rgba(102, 126, 234, 0.4);
+}
+
+.card-image {
+    height: 160px;
+    overflow: hidden;
+    position: relative;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.learning-card:hover .card-image img {
+    transform: scale(1.1);
+}
+
+.card-content {
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.card-content h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.mulai-btn {
+    display: inline-block;
+    background: #4b54ff;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(75, 84, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.mulai-btn:hover {
+    background: #3a44dd;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(75, 84, 255, 0.4);
+}
+
+@media (max-width: 768px) {
+    .mode-belajar-wrapper {
+        padding: 80px 5% 60px;
+        min-height: auto;
+    }
+
+    .learning-cards {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .learning-card {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .mode-belajar-header p {
+        font-size: 16px;
+        padding: 15px 20px;
+    }
+}

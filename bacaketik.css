@@ -1,0 +1,326 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Open-Dyslexic', 'Poppins', Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: url('bgbelajar.png') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 800px;
+    position: relative;
+}
+
+.content-box {
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #333;
+    border-radius: 20px;
+    padding: 2.5rem;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.title {
+    color: #000;
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.subtitle {
+    color: #333;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.word-card {
+    background: #fff;
+    padding: 2.5rem;
+    border: 2px solid #333;
+    border-radius: 15px;
+    margin: 2rem auto;
+    max-width: 600px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.target-word {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #000;
+    margin-bottom: 0.5rem;
+}
+
+.dot-separator {
+    color: #666;
+    font-size: 2rem;
+}
+
+.input-container {
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+.word-input {
+    width: 100%;
+    padding: 1.2rem;
+    border: 2px solid #333;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    text-align: center;
+    background: #fff;
+}
+
+.word-input.correct {
+    border-color: #28a745;
+    background-color: #d4edda;
+}
+
+.word-input.wrong {
+    border-color: #dc3545;
+    background-color: #f8d7da;
+}
+
+.feedback-message {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    min-height: 24px;
+    transition: all 0.3s ease;
+}
+
+.feedback-message.correct {
+    color: #28a745;
+}
+
+.feedback-message.wrong {
+    color: #dc3545;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 1rem 3rem;
+    border: 2px solid #333;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-check {
+    background: #00FF00;
+    color: #000;
+}
+
+.btn-selanjutnya {
+    background: #FFFF00;
+    color: #000;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.back-btn {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    width: 80px;
+    height: 80px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.back-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.back-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.modal.show {
+    opacity: 1;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 90%;
+    width: 400px;
+    transform: scale(0.9);
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 2px solid #333;
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    margin-bottom: 1.5rem;
+}
+
+.modal-icon {
+    font-size: 4rem;
+    color: #ffc107;
+    margin-bottom: 1rem;
+}
+
+.modal-content h2 {
+    color: #333;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.modal-content p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.modal-btn {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.confirm-btn {
+    background: #28a745;
+    color: white;
+    text-decoration: none;
+}
+
+.cancel-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.modal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+    .content-box {
+        padding: 1.5rem;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .word-card {
+        padding: 1.5rem;
+    }
+
+    .target-word {
+        font-size: 2.2rem;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 0.8rem;
+    }
+
+    .back-btn {
+        width: 60px;
+        height: 60px;
+    }
+
+    .modal-content {
+        width: 90%;
+        padding: 1.5rem;
+    }
+
+    .modal-icon {
+        font-size: 3rem;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .modal-content p {
+        font-size: 1rem;
+    }
+
+    .modal-btn {
+        padding: 0.8rem 1.5rem;
+    }
+    .noselect {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Optional: Disable copy context menu */
+.word-card {
+    -webkit-touch-callout: none;
+}
+
+}

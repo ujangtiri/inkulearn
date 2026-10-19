@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">
+  <!-- Background -->
+  <rect width="300" height="200" fill="#87CEEB" />
+  
+  <!-- Paper -->
+  <rect x="50" y="30" width="200" height="140" fill="#FFFFFF" rx="10" ry="10" stroke="#333333" stroke-width="2" />
+  
+  <!-- Dotted Letters -->
+  <g fill="none" stroke="#333333" stroke-width="2" stroke-dasharray="5,5">
+    <!-- Letter b -->
+    <path d="M80,60 L80,120 M80,90 C80,80 100,80 100,90 C100,100 80,100 80,90" />
+    
+    <!-- Letter a -->
+    <path d="M120,90 C120,80 140,80 140,90 C140,100 120,100 120,90 M140,90 L140,120" />
+    
+    <!-- Letter j -->
+    <path d="M160,70 L160,120 C160,130 150,130 150,120" />
+    
+    <!-- Letter u -->
+    <path d="M180,70 L180,110 C180,120 200,120 200,110 L200,70" />
+  </g>
+  
+  <!-- Pencil -->
+  <g transform="translate(220,50) rotate(45)">
+    <rect x="0" y="0" width="40" height="10" fill="#FFD700" />
+    <polygon points="0,0 0,10 -15,5" fill="#FF6347" />
+    <rect x="40" y="0" width="5" height="10" fill="#A0522D" />
+  </g>
+</svg>

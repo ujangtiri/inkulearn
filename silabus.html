@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silabus - InkuLearn</title>
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/open-dyslexic">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0066FF;
+            --white: #FFFFFF;
+            --yellow: #FFD700;
+            --text-dark: #333333;
+            --light-gray: #F5F5F5;
+            --success: #28a745;
+            --danger: #dc3545;
+            --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open-Dyslexic', Arial, sans-serif !important;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, var(--primary-blue) 100%);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #threejs-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .outer-container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-container {
+            background: rgba(0, 102, 255, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        .silabus-title {
+            color: var(--white);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            text-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
+        }
+
+        .instruction-text {
+            color: var(--white);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .input-wrapper {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .word-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            text-align: center;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .word-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .display-box {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .syllable-text {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: 2px;
+            transition: transform 0.3s ease;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            max-width: 100%;
+            line-height: 1.2;
+            text-align: center;
+            display: block;
+        }
+
+        .syllable-text.long-text {
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+
+        .syllable-text.very-long-text {
+            font-size: 1.4rem;
+            letter-spacing: 0.5px;
+        }
+
+        .syllable-text.extremely-long-text {
+            font-size: 1.1rem;
+            letter-spacing: 0px;
+            line-height: 1.3;
+        }
+
+        .eja-button {
+            background: var(--yellow);
+            color: var(--text-dark);
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .eja-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+            background: #FFE44D;
+        }
+
+        .eja-button:active {
+            transform: translateY(0);
+        }
+
+        .back-btn {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(255, 215, 0, 0.9);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 80px;
+            height: 80px;
+            padding: 1rem;
+            z-index: 100;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .back-icon {
+            width: 24px;
+            height: 24px;
+            color: var(--text-dark);
+        }
+
+        .back-btn:hover {
+            transform: scale(1.1) translateX(-5px);
+            background: var(--yellow);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content h2 {
+            color: var(--text-dark);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .modal-content p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+        }
+
+        .modal-btn {
+            padding: 0.9rem 2.5rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .yes-btn {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .no-btn {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .modal-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .card-container {
+                padding: 2rem;
+                width: 95%;
+            }
+
+            .silabus-title {
+                font-size: 2rem;
+            }
+
+            .instruction-text {
+                font-size: 0.9rem;
+            }
+
+            .syllable-text {
+                font-size: 1.8rem;
+            }
+
+            .syllable-text.long-text {
+                font-size: 1.5rem;
+            }
+
+            .syllable-text.very-long-text {
+                font-size: 1.2rem;
+            }
+
+            .syllable-text.extremely-long-text {
+                font-size: 1rem;
+            }
+
+            .back-btn {
+                bottom: 1.5rem;
+                left: 1.5rem;
+                width: 60px;
+                height: 60px;
+            }
+
+            .modal-content {
+                padding: 2rem;
+            }
+
+            .modal-btn {
+                padding: 0.8rem 2rem;
+                min-width: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .outer-container {
+                padding: 1rem;
+            }
+
+            .card-container {
+                padding: 1.5rem;
+            }
+
+            .silabus-title {
+                font-size: 1.8rem;
+            }
+
+            .syllable-text {
+                font-size: 1.6rem;
+            }
+
+            .syllable-text.long-text {
+                font-size: 1.3rem;
+            }
+
+            .syllable-text.very-long-text {
+                font-size: 1.1rem;
+            }
+
+            .syllable-text.extremely-long-text {
+                font-size: 0.95rem;
+            }
+
+            .display-box {
+                padding: 1.5rem;
+                min-height: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="threejs-canvas"></canvas>
+    
+    <div class="outer-container">
+        <div class="card-container">
+            <div class="content-wrapper">
+                <h1 class="silabus-title">Mengeja</h1>
+                <p class="instruction-text">Masukkan kata yang ingin dieja</p>
+                <div class="input-wrapper">
+                    <input type="text" id="wordInput" class="word-input" placeholder="Masukkan kata.." autocomplete="off">
+                </div>
+
+                <div class="display-box">
+                    <div id="syllableDisplay" class="syllable-text">Kata</div>
+                </div>
+
+                <button id="ejaButton" class="eja-button">
+                    <span class="button-text">Eja kata ini!</span>
+                </button>
+            </div>
+        </div>
+        <button id="backBtn" class="back-btn" aria-label="Kembali">
+            <svg class="back-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+            </svg>
+        </button>
+    </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h2>Konfirmasi</h2>
+            <p>Apakah anda ingin keluar dari silabus?</p>
+            <div class="modal-buttons">
+                <button id="noBtn" class="modal-btn no-btn">Tidak</button>
+                <button id="yesBtn" class="modal-btn yes-btn">Ya</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let scene, camera, renderer;
+        let stars = [], moon;
+        let mouseX = 0, mouseY = 0;
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'id-ID';
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Browser kamu tidak mendukung Text-to-Speech!");
+            }
+        }
+
+        function speakSyllables(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const syllables = text.split('-');
+                let index = 0;
+                
+                function speakNext() {
+                    if (index < syllables.length) {
+                        const utterance = new SpeechSynthesisUtterance(syllables[index].trim());
+                        utterance.lang = 'id-ID';
+                        utterance.rate = 0.7;
+                        utterance.pitch = 1;
+
+                        utterance.onend = () => {
+                            index++;
+                            setTimeout(speakNext, 400);
+                        };
+
+                        window.speechSynthesis.speak(utterance);
+                    }
+                }
+                speakNext();
+            } else {
+                alert("Browser kamu tidak mendukung Text-to-Speech!");
+            }
+        }
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 10;
+
+            renderer = new THREE.WebGLRenderer({ 
+                canvas: document.getElementById('threejs-canvas'),
+                alpha: true,
+                antialias: true
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+
+            createStars();
+            createMoon();
+            animate();
+
+            document.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function createStarShape() {
+            const starShape = new THREE.Shape();
+            const outerRadius = 1;
+            const innerRadius = 0.4;
+            const spikes = 5;
+
+            for (let i = 0; i < spikes * 2; i++) {
+                const angle = (i / (spikes * 2)) * Math.PI * 2;
+                const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+
+                if (i === 0) {
+                    starShape.moveTo(x, y);
+                } else {
+                    starShape.lineTo(x, y);
+                }
+            }
+            starShape.closePath();
+            return starShape;
+        }
+
+        function createStars() {
+            const starShape = createStarShape();
+            const extrudeSettings = {
+                depth: 0.1,
+                bevelEnabled: true,
+                bevelSegments: 2,
+                steps: 2,
+                bevelSize: 0.1,
+                bevelThickness: 0.1
+            };
+
+            for (let i = 0; i < 25; i++) {
+                const geometry = new THREE.ExtrudeGeometry(starShape, extrudeSettings);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0xFFD700,
+                    transparent: true,
+                    opacity: 0.8 + Math.random() * 0.2
+                });
+
+                const star = new THREE.Mesh(geometry, material);
+                star.position.x = (Math.random() - 0.5) * 30;
+                star.position.y = (Math.random() - 0.5) * 20;
+                star.position.z = (Math.random() - 0.5) * 20;
+                
+                const scale = 0.1 + Math.random() * 0.15;
+                star.scale.set(scale, scale, scale);
+                
+                star.rotation.x = Math.random() * Math.PI * 2;
+                star.rotation.y = Math.random() * Math.PI * 2;
+                star.rotation.z = Math.random() * Math.PI * 2;
+                
+                star.rotationSpeed = {
+                    x: (Math.random() - 0.5) * 0.02,
+                    y: (Math.random() - 0.5) * 0.02,
+                    z: (Math.random() - 0.5) * 0.02
+                };
+
+                star.twinkleSpeed = 0.02 + Math.random() * 0.03;
+                star.twinkleOffset = Math.random() * Math.PI * 2;
+
+                stars.push(star);
+                scene.add(star);
+            }
+        }
+
+        function createMoon() {
+            const moonGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+            const moonMaterial = new THREE.MeshBasicMaterial({
+                color: 0xFFD700,
+                transparent: true,
+                opacity: 0.9
+            });
+            
+            moon = new THREE.Mesh(moonGeometry, moonMaterial);
+            moon.position.set(-8, 5, -5);
+
+            const glowGeometry = new THREE.SphereGeometry(1.8, 32, 32);
+            const glowMaterial = new THREE.MeshBasicMaterial({
+                color: 0xFFD700,
+                transparent: true,
+                opacity: 0.2
+            });
+            const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+            moon.add(glow);
+
+            const eyeGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+            const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+            
+            const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            leftEye.position.set(-0.3, 0.2, 1.4);
+            moon.add(leftEye);
+
+            const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            rightEye.position.set(0.3, 0.2, 1.4);
+            moon.add(rightEye);
+
+            const smileGeometry = new THREE.TorusGeometry(0.3, 0.05, 8, 16, Math.PI);
+            const smileMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+            const smile = new THREE.Mesh(smileGeometry, smileMaterial);
+            smile.position.set(0, -0.2, 1.4);
+            smile.rotation.z = Math.PI;
+            moon.add(smile);
+
+            scene.add(moon);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now() * 0.001;
+
+            stars.forEach((star, index) => {
+                star.rotation.x += star.rotationSpeed.x;
+                star.rotation.y += star.rotationSpeed.y;
+                star.rotation.z += star.rotationSpeed.z;
+
+                const twinkle = Math.sin(time * star.twinkleSpeed + star.twinkleOffset);
+                star.material.opacity = 0.6 + (twinkle * 0.4);
+
+                star.position.y += Math.sin(time * 0.5 + index) * 0.01;
+                star.position.x += Math.cos(time * 0.3 + index) * 0.005;
+            });
+
+            if (moon) {
+                moon.position.y = 5 + Math.sin(time * 0.8) * 0.5;
+                moon.rotation.z = Math.sin(time * 0.5) * 0.1;
+
+                const glow = moon.children[0];
+                if (glow) {
+                    glow.material.opacity = 0.15 + Math.sin(time * 2) * 0.1;
+                    glow.scale.setScalar(1 + Math.sin(time * 1.5) * 0.1);
+                }
+            }
+
+            camera.position.x += (mouseX * 2 - camera.position.x) * 0.02;
+            camera.position.y += (-mouseY * 2 - camera.position.y) * 0.02;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        function onMouseMove(event) {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function createStarBurst() {
+            stars.forEach(star => {
+                star.material.opacity = 1;
+                star.scale.multiplyScalar(1.5);
+                
+                setTimeout(() => {
+                    star.material.opacity = 0.8;
+                    star.scale.divideScalar(1.5);
+                }, 1000);
+            });
+
+            if (moon) {
+                moon.scale.setScalar(1.2);
+                setTimeout(() => {
+                    moon.scale.setScalar(1);
+                }, 500);
+            }
+        }
+
+        function adjustTextSize(element, text) {
+            element.classList.remove('long-text', 'very-long-text', 'extremely-long-text');
+            const textLength = text.length;
+            
+            if (textLength > 40) {
+                element.classList.add('extremely-long-text');
+            } else if (textLength > 25) {
+                element.classList.add('very-long-text');
+            } else if (textLength > 15) {
+                element.classList.add('long-text');
+            }
+        }
+
+        function splitIntoSyllables(word) {
+            let w = word.toLowerCase().trim();
+            if (!w) return "";
+
+            const vowels = "aiueo";
+            let result = [];
+            let current = "";
+
+            for (let i = 0; i < w.length; i++) {
+                const char = w[i];
+                const isVowel = vowels.includes(char);
+                const nextChar = w[i + 1];
+                const nextIsVowel = nextChar ? vowels.includes(nextChar) : false;
+                const nextNextChar = w[i + 2];
+                const nextNextIsVowel = nextNextChar ? vowels.includes(nextNextChar) : false;
+
+                current += char;
+
+                // Jika karakter saat ini adalah vokal
+                if (isVowel) {
+                    // Cek pola setelah vokal
+                    if (nextChar && !nextIsVowel) {
+                        // Ada konsonan setelah vokal
+                        if (nextNextChar && !nextNextIsVowel) {
+                            // Pola: V-KK (vokal-konsonan-konsonan)
+                            // Pisah setelah konsonan pertama
+                            current += nextChar;
+                            result.push(current);
+                            current = "";
+                            i++;
+                        } else if (nextNextChar && nextNextIsVowel) {
+                            // Pola: V-KV (vokal-konsonan-vokal)
+                            // Pisah sebelum konsonan
+                            result.push(current);
+                            current = "";
+                        } else if (!nextNextChar) {
+                            // Konsonan di akhir kata
+                            current += nextChar;
+                            result.push(current);
+                            current = "";
+                            i++;
+                        }
+                    } else if (nextChar && nextIsVowel) {
+                        // Dua vokal berurutan (diftong)
+                        // Bisa dipisah atau digabung tergantung kasus
+                        // Untuk sekarang, pisah di sini
+                        result.push(current);
+                        current = "";
+                    } else {
+                        // Vokal di akhir kata
+                        result.push(current);
+                        current = "";
+                    }
+                }
+            }
+
+            // Tambahkan sisa karakter jika ada
+            if (current) {
+                if (result.length > 0) {
+                    // Gabungkan dengan suku kata sebelumnya jika hanya konsonan
+                    const hasVowel = [...current].some(c => vowels.includes(c));
+                    if (!hasVowel) {
+                        result[result.length - 1] += current;
+                    } else {
+                        result.push(current);
+                    }
+                } else {
+                    result.push(current);
+                }
+            }
+
+            // Gabungkan hasil dengan tanda strip
+            let finalWord = result.join("-");
+            // Kapitalisasi huruf pertama
+            return finalWord.charAt(0).toUpperCase() + finalWord.slice(1);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initThreeJS();
+
+            const wordInput = document.getElementById('wordInput');
+            const syllableDisplay = document.getElementById('syllableDisplay');
+            const ejaButton = document.getElementById('ejaButton');
+            const backBtn = document.getElementById('backBtn');
+            const modal = document.getElementById('confirmModal');
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+
+            ejaButton.addEventListener('click', function() {
+                if (wordInput.value) {
+                    const syllables = splitIntoSyllables(wordInput.value);
+                    syllableDisplay.textContent = syllables;
+                    adjustTextSize(syllableDisplay, syllables);
+
+                    syllableDisplay.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        syllableDisplay.style.transform = 'scale(1)';
+                    }, 200);
+                    createStarBurst();
+
+                    speakSyllables(syllables);
+                }
+            });
+
+            backBtn.addEventListener('click', function() {
+                modal.style.display = 'flex';
+                setTimeout(() => modal.classList.add('show'), 10);
+            });
+
+            yesBtn.addEventListener('click', function() {
+                window.location.href = 'mode-belajar.php';
+            });
+
+            noBtn.addEventListener('click', function() {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.classList.remove('show');
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, 300);
+                }
+            });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    ejaButton.click();
+                } else if (event.key === 'Escape' && modal.style.display === 'flex') {
+                    noBtn.click();
+                }
+            });
+
+            wordInput.form?.addEventListener('submit', function(e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>
